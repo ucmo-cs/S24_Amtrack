@@ -1,0 +1,94 @@
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+
+.password-toggle-icon {
+    font-family: "Font Awesome 5 Free";
+    cursor: pointer;
+    margin-left: -27px;
+  }
+  
+.margins{
+    margin: 10px;
+}
+
+
+
+
+label {
+    width: 20%; /* Set label width */
+    display: inline-block; /* Display labels in block */
+    text-align: right; /* Align labels to the right */
+    margin-right: 10px; /* Add some space between label and input */
+    font-weight: bold;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+    
+  
+  
+
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 20%;
+  }
+
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  table th, table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    background-color: #91b9e0;
+  }
+  
+  table th {
+    background-color: #d06e6e;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+
+  body{
+    background-color: #e3f2fdb0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('https://kessiworld.com/wp-content/uploads/2023/04/Kessiworld-Seattle-Vancouver-Train-17.png');
+  }
+
+  .error-message{
+    margin-left: 311px;
+    margin-bottom: 10px;
+    color: red;
+    font-weight: bolder;
+  }
+  
