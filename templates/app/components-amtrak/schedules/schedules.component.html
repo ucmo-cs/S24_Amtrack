@@ -1,0 +1,131 @@
+<section class="schedules-page">
+    <h2>Schedules</h2>
+  
+    <!-- Button to add new schedule -->
+    <div *ngIf="!showNewScheduleForm && !isEditClicked">
+      <button (click)="addNewSchedule()">Add New Schedule</button>
+    </div>
+  
+    <div *ngIf="showNewScheduleForm || isEditClicked">
+    <div>
+      <h3 *ngIf="showNewScheduleForm">Add New Schedule</h3>
+      <h3 *ngIf="isEditClicked">Update Schedule</h3>
+      <div >
+        
+        <div class="margins">
+            <label for="trainName">Train Name:</label>
+        <select id="trainName" name="trainName" [(ngModel)]="selectedTrain" [disabled]="isEditClicked">
+          <option *ngFor="let train of trains" [value]="train.trainName">{{ train.trainName }}</option>
+        </select>
+        </div>
+
+        <div class="margins">
+          <label for="startStation">Start Station:</label>
+          <select id="startStation" name="startStation" [(ngModel)]="startStation">
+            <option *ngFor="let station of stations" [value]="station.stationName">{{ station.stationName }}</option>
+          </select>
+        </div>
+        <div class="margins">
+          <label for="endStation">End Station:</label>
+          <select id="endStation" name="endStation" [(ngModel)]="endStation">
+            <option *ngFor="let station of stations" [value]="station.stationName">{{ station.stationName }}</option>
+          </select>
+        </div>
+  
+        <div class="margins">
+        <label for="dayOfWeek">Start Day of Week:</label>
+        <select id="dayOfWeek" name="dayOfWeek" [(ngModel)]="selectedStartDay">
+          <option *ngFor="let day of daysOfWeek" [value]="day">{{ day }}</option>
+        </select></div>
+
+      
+  
+        <div class="margins">
+        <label for="startTime">Start Time:</label>
+        <input type="time" id="startTime" name="startTime" [(ngModel)]="startTime"></div>
+  
+        <div class="margins"></div> <label for="endTime">Estimated End Time:</label>
+        <input type="time" id="endTime" name="endTime" [(ngModel)]="endTime"></div>
+
+    </div>
+
+      
+    <div class="margins">
+        
+        <label >Select Station</label>
+        <select [(ngModel)]="stationName">
+        <option *ngFor="let station of stations" [value]="station.stationName">{{ station.stationName }}</option>
+      </select>
+       <label >Arrival Time</label>
+        <input type="time" [(ngModel)]="arrivalTime">
+      <button class="margins" type="submit" (click)="addStation()">Add station In schedule</button>
+    </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Station Name</th>
+              <th>Arrival Time</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let station of scheduleStations">             
+              <td>{{ station.stationName }}</td>
+              <td><input type="time" [(ngModel)]="station.arrivalTime"></td>
+              <td> <button type="submit" (click)="removeFromSchedule(station)">Remove From schedule</button></td>
+            </tr>
+          </tbody>
+        </table>
+  
+        <button type="submit" (click)="saveNewSchedule()">Save Schedule</button>
+        <button type="submit" (click)="OnBackClicked()">Back</button>
+    </div>
+</section>
+
+<section class="schedules-page" *ngIf="!showNewScheduleForm && !isEditClicked">
+  <div *ngIf="existingSchedules.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>Train Name</th>
+          <th>Train Number</th>
+          <th>Start Station</th>
+          <th>Start Day of Week</th>
+          <th>Start Time</th>
+          <th>Destination Station</th>
+          <th>Estiamted Destination Time</th>
+          <th>Stations</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let schedule of existingSchedules">
+          <td>{{ schedule.trainName }}</td>
+          <td>{{ schedule.trainNumber }}</td>
+          <td>{{schedule.startStation}}</td>
+          <td>{{ schedule.startDay }}</td>          
+          <td>{{ convertTo12HourFormat(schedule.startTime) }}</td>
+          <td>{{schedule.destinationStation}}</td>
+          <td>{{ convertTo12HourFormat(schedule.endTime) }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let station of schedule.stations; let i = index">
+                {{ station.stationName }} - Estimated Arrival Time: {{ convertTo12HourFormat(station.arrivalTime) }}
+              </li>
+            </ul>
+          </td>
+          <td>
+            <button (click)="editSchedule(schedule)">Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="existingSchedules.length === 0">
+    <p>No existing schedules.</p>
+  </div>
+</section>
+
+
+  
