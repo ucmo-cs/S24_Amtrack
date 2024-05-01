@@ -1,0 +1,180 @@
+<section class="search-trains" *ngIf="!showPaymentDetails && !showReserveFields">
+  <section>
+    <div class="margins"><input type="text" placeholder="Enter Train Name" [(ngModel)]="searchParams.trainName"></div>
+    <button type="submit" (click)="searchTrains()">Search</button>
+  </section>
+
+  <div *ngIf="searchResults.length > 0 && !showReserveFields">
+    <table>
+      <thead>
+        <tr>
+          <th>Train Name</th>
+          <th>Start Station</th>
+          <th>Start Day of Week</th>
+          <th>Start Time</th>
+          <th>Destination Station</th>
+          <th>Estiamted Destination Time</th>
+          <th>Stations</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let schedule of searchResults">
+          <td>{{ schedule.trainName }}</td>
+          <td>{{schedule.startStation}}</td>
+          <td>{{ schedule.startDay }}</td>
+          <td>{{ convertTo12HourFormat(schedule.startTime) }}</td>
+          <td>{{schedule.destinationStation}}</td>
+          <td>{{ convertTo12HourFormat(schedule.endTime) }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let station of schedule.stations; let i = index">
+                {{ station.stationName }} - Estimated Arrival Time: {{ convertTo12HourFormat(station.arrivalTime) }}
+              </li>
+            </ul>
+          </td>
+          <td>
+            <button (click)="onReserveClick(schedule)">Reserve Now</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="searchResults.length === 0 && searchPerformed ">
+    <p>No trains found matching the criteria.</p>
+  </div>
+</section>
+
+<div *ngIf="showReserveFields && !showPaymentDetails">
+  <div class="margins">
+  <label for="class">Select Class:</label>
+  <select name="class" [(ngModel)]="selectedClass">
+    <option value="First Class">First Class</option>
+    <option value="Business Class">Business Class</option>
+    <option value ="Economy Class">Economy Class</option>
+
+  </select></div>
+
+  <div class="margins">
+    <label for="fromStation">From:</label>
+    <select name="fromStation" [(ngModel)]="selectedFromStation">
+      <option *ngFor="let station of applicableFromStations" [value]="station.stationName">
+        {{ station.stationName }}
+      </option>
+    </select>
+  </div>
+  <div class="margins">
+
+    <label for="toStation">To:</label>
+    <select name="toStation" [(ngModel)]="selectedToStation">
+      <option *ngFor="let station of applicableFromStations" [value]="station.stationName">
+        {{ station.stationName }}
+      </option>
+    </select>
+  </div>
+  <div class="margins">
+    <label for="date">Date:</label>
+    <input name="date" type="date" [(ngModel)]="selectedDate" (change)="checkAvaliabillity($event)">
+  </div>
+  
+  <div class="margins" *ngIf="errorMsg">
+    <span class="error-message">No Avalibile schedule for the day selected for specific train</span>
+  </div>
+  <div class="margins" *ngIf="showNoAvalibilityOfSeats">
+    <span class="error-message">No Avalibile seats for the day selected for specific train</span>
+  </div>
+</div>
+<section *ngIf="!errorMsg && !showNoAvalibilityOfSeats && showReserveFields && selectedSchedule">
+  <div class="margins">
+    <label>Amount per person (In $): {{calculateFare()}}</label>
+  </div>
+  <div class="margins">
+    <label for="numOfSeats">Number of Seats:</label>
+    <input type="number" name="numOfSeats" [(ngModel)]="numOfSeats" (change)="showTable()">
+  </div>
+
+  <table *ngIf="!errorMsg && showReserveFields && selectedSchedule && numOfSeats">
+    <thead>
+      <tr>
+        <th>Passenger Number</th>
+        <th>Name</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let seat of seatsArray; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td><input type="text" name="name" [(ngModel)]="seat.name"></td>
+        <td><input type="date" name="dob" [(ngModel)]="seat.dob"></td>
+        <td>
+          <select name="gender" [(ngModel)]="seat.gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <div class="margins">
+    <button *ngIf="!showPaymentDetails" (click)="viewPaymentSection()">View Payment Section</button>
+  </div>
+
+</section>
+
+
+<section *ngIf="showPaymentDetails">
+  <div>
+    <div class="form-group">
+      <label for="selectedPaymentMethod">Select Card Type:</label>
+      <select id="selectedPaymentMethod" name="selectedPaymentMethod"
+        [(ngModel)]="paymentDetails.selectedPaymentMethod">
+        <option value="debit">Debit Card</option>
+        <option value="credit">Credit Card</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="cardNumber">Card Number:</label>
+      <input type="number" id="cardNumber" name="cardNumber" [(ngModel)]="paymentDetails.cardNumber">
+    </div>
+    <div class="form-group mr-l-350">
+      <span *ngIf="!cardNumberValidation()" class="error-message t-r"> Entered Card Number is not valid</span>
+    </div>
+
+    <div class="form-group">
+      <label for="cardNumber">CVV:</label>
+      <input type="number" id="cardNumber" name="cardNumber" (change)="validateCvv($event)"
+        [(ngModel)]="paymentDetails.cvv">
+    </div>
+    <div class="form-group mr-l-350">
+      <span *ngIf="!isCvvValid" class="error-message t-r"> Entered CVV is not valid</span>
+    </div>
+
+    <div class="form-group">
+      <label for="cardNumber">Name On Card:</label>
+      <input type="text" id="cardNumber" name="cardNumber" [(ngModel)]="paymentDetails.nameOnCard">
+    </div>
+
+
+    <div class="form-group">
+      <label for="expireDate" class=" margins">Expiry Date(MM/YY)</label>
+      <input type="text" id="expiryDate" class="mr-r-15  mr-l-15" (change)="validateExpiryDate($event)"
+        name="expiryDate" [(ngModel)]="paymentDetails.expireDate" required>
+
+    </div>
+    <div class="form-group mr-l-350">
+      <span *ngIf="!isMonthValid || !isFutureDate" class="error-message t-r"> Invalid Expiry Date</span>
+    </div>
+
+
+
+    <button type="submit" (click)="submitPayment()">Submit Payment</button>
+  </div>
+</section>
+
+<div class="margins"  *ngIf="showReserveFields">
+  <button type="submit" (click)="backClicked()">Back</button>
+</div>
