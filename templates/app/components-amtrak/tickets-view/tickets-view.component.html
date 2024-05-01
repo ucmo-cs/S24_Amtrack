@@ -1,0 +1,34 @@
+<table>
+    <thead>
+      <tr>
+        <th>Passenger Name</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
+        <th>Train Name</th>
+        <th>Start Station</th>
+        <th>Destination Station</th>
+        <th>Estimated Arrival Time</th>
+        <th>Fare</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ticket of tickets">
+        <td>{{ ticket.passengerName }}</td>
+        <td>{{ ticket.dob }}</td>
+        <td>{{ ticket.gender }}</td>
+        <td>{{ ticket.trainName }}</td>
+        <td>{{ ticket.startStation }}</td>
+        <td>{{ ticket.destinationStation }}</td>
+        <td>{{ convertTo12HourFormat(ticket.estimatedArrivalTime) }}</td>
+        <td>{{ ticket.fare }}</td>
+        <td>{{ ticket.status }}</td>
+        <td>
+          <button *ngIf="ticket.status !== 'Cancelled' && getService.user.isCustomer" (click)="cancelReservation(ticket)">Cancel Reservation</button>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
