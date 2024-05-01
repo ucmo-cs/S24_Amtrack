@@ -1,0 +1,90 @@
+<section class="admin-page" *ngIf="!showStationForm">
+    
+    <div class="admin-actions margins">
+      <button (click)="showAddStationForm()">Add Station</button>
+    </div>
+</section>
+
+    
+<div *ngIf="showStationForm">
+    <h3>Add Station</h3>
+    <div >
+      <div>
+        <label for="stationName">Station Name:</label>
+        <input type="text" id="stationName" name="stationName" [(ngModel)]="stationName">
+      </div>
+      <div>
+        <label for="stationLocation">Location:</label>
+        <input type="text" id="stationLocation" name="stationLocation" [(ngModel)]="stationLocation">
+
+      </div>
+      <div>
+        <label for="phonenum">Phone Number:</label>
+        <input type="text" id="phonenum" name="phonenum" [(ngModel)]="phoneNumber">
+
+      </div>
+      <div>
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" [(ngModel)]="city">
+
+      </div>
+      <div>
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" [(ngModel)]="state">
+
+      </div>
+     
+      
+      <div><button type="submit" (click)="addStation()">Add Station</button>
+        <button type="submit" (click)="OnBackClicked()">Back</button></div>
+    </div>
+  </div>
+
+  <section *ngIf="!showStationForm">
+    <table>
+        <thead>
+          <tr>
+            <th>Station Name</th>
+            <th>Station Location</th>
+            <th>Station Phone Number</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let station of stations; let i = index">
+            <td>
+              <span *ngIf="!station.editable">{{station.stationName}}</span>
+              <input type="text" *ngIf="station.editable" [(ngModel)]="station.updatedName" [disabled]="!station.editable">
+            </td>
+            <td>
+              <span *ngIf="!station.editable">{{station.location}}</span>
+              <input type="text" *ngIf="station.editable" [(ngModel)]="station.updatedLocation" [disabled]="!station.editable">
+            </td>
+            <td>
+              <span *ngIf="!station.editable">{{station.phoneNumber}}</span>
+              <input type="text" *ngIf="station.editable" [(ngModel)]="station.updatedPhoneNum" [disabled]="!station.editable">
+            </td>
+            <td>
+              <span *ngIf="!station.editable">{{station.city}}</span>
+              <input type="text" *ngIf="station.editable" [(ngModel)]="station.updatedCity" [disabled]="!station.editable">
+            </td> <td>
+              <span *ngIf="!station.editable">{{station.state}}</span>
+              <input type="text" *ngIf="station.editable" [(ngModel)]="station.updatedState" [disabled]="!station.editable">
+            </td>
+
+
+            <td>
+              <button (click)="toggleEdit(station)">
+                {{ station.editable ? 'Save' : 'Edit' }}
+              </button>
+              <button class="margins"*ngIf="station.editable" (click)="cancelEdit(station)">
+                  Back
+                </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  </section>
+
